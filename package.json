@@ -4,6 +4,7 @@
   "description": "an ebook app",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon server.ts",
     "test": "\\"
   },
   "author": "shivam kumar <1thenameisshivam@gmail.com>",
