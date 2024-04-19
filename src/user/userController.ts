@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { config } from "../config/config";
 import { User } from "./userTypes";
+
 const registerUser = async (
   req: Request,
   res: Response,
@@ -46,11 +47,15 @@ const registerUser = async (
   }
 
   //jwt token will be here
-  const token = sign({ sub: newUser._id }, config.jwtSecret, {
-    expiresIn: "7d",
-    algorithm: "HS256",
-  });
-  res.json({ message: "user registered successfully", access_token: token });
+  try {
+    const token = sign({ sub: newUser._id }, config.jwtSecret, {
+      expiresIn: "7d",
+      algorithm: "HS256",
+    });
+    res.json({ message: "user registered successfully", access_token: token });
+  } catch (err) {
+    return next(createHttpError(500, "error while generating token"));
+  }
 };
 
 export { registerUser };
