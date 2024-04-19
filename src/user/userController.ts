@@ -4,6 +4,7 @@ import userModel from "./userModel";
 import bcrypt from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { config } from "../config/config";
+import { User } from "./userTypes";
 const registerUser = async (
   req: Request,
   res: Response,
@@ -19,22 +20,30 @@ const registerUser = async (
 
   // check beafore save user already exist or not
 
-  const userExist = await userModel.findOne({ email: email });
-  if (userExist) {
-    const error = createHttpError(400, "user already exist with this email");
-    return next(error);
+  try {
+    const userExist = await userModel.findOne({ email: email });
+    if (userExist) {
+      const error = createHttpError(400, "user already exist with this email");
+      return next(error);
+    }
+  } catch (err) {
+    return next(createHttpError(500, "error while getting user"));
   }
 
   //password hashing code will be here
 
   const hashPassword = await bcrypt.hash(password, 10);
   // register the user
-
-  const newUser = await userModel.create({
-    name,
-    email,
-    password: hashPassword,
-  });
+  let newUser: User;
+  try {
+    newUser = await userModel.create({
+      name,
+      email,
+      password: hashPassword,
+    });
+  } catch (err) {
+    return next(createHttpError(500, "error while registering user"));
+  }
 
   //jwt token will be here
   const token = sign({ sub: newUser._id }, config.jwtSecret, {
