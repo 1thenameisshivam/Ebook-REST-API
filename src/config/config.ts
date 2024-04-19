@@ -10,6 +10,7 @@ const _config = {
   cloudinaryCloudName: String(process.env.CLOUDINARY_CLOUD_NAME),
   cloudinaryApiKey: String(process.env.CLOUDINARY_API_KEY),
   cloudinaryApiSecret: String(process.env.CLOUDINARY_API_SECRET),
+  frontendUrl: String(process.env.FRONTEND_URL),
 };
 
 export const config = Object.freeze(_config);
