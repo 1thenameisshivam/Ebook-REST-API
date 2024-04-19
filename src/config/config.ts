@@ -6,6 +6,7 @@ const _config = {
   port: process.env.PORT,
   dburl: String(process.env.MONGO_CONNECTION_STRING),
   env: process.env.NODE_ENV,
+  jwtSecret: String(process.env.JWT_SECRET),
 };
 
 export const config = Object.freeze(_config);

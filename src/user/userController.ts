@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
 import userModel from "./userModel";
 import bcrypt from "bcrypt";
+import { sign } from "jsonwebtoken";
+import { config } from "../config/config";
 const registerUser = async (
   req: Request,
   res: Response,
@@ -34,7 +36,12 @@ const registerUser = async (
     password: hashPassword,
   });
 
-  res.json({ message: "user registered successfully", id: newUser._id });
+  //jwt token will be here
+  const token = sign({ sub: newUser._id }, config.jwtSecret, {
+    expiresIn: "7d",
+    algorithm: "HS256",
+  });
+  res.json({ message: "user registered successfully", access_token: token });
 };
 
 export { registerUser };
